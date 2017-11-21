@@ -1,9 +1,13 @@
-export_things.py
+_FORK Disclaimer_ : Just fixed the original script written by Carlos Garcia Saura (carlosgs) to work with BeautifulSoup4 and done some minor changes. I'm not a python programmer so some googling and stackoverflow searches help me to make script run again..
+
+Know bugs : When script reaches to the end page it does not stop. Just leaching same last page over and over.
+
+Thingiverse Exporter
 =============
 
 Script that simplifies exporting all your stuff out of Thingiverse  
 It creates a Git-compatible directory with a list and folders. Each folder contains all the files, images and description for each design.  
-Free your things! Au revoir Thingiverse!  
+
 
 Example of the result: <https://github.com/carlosgs/carlosgs-designs>  
 
@@ -19,7 +23,8 @@ Instructions
 * Edit lines 17-19 for user, authorName, and authorDescription
 * Install PIP (sudo apt-get install python-pip)
 * Install requests (sudo pip install requests)
-* Install beautifulsoup (sudo pip install beautifulsoup) not BeautifulSoup4
+* Install lxml (sudo pip install lxml)
+* Install beautifulsoup4 (sudo pip install beautifulsoup4)
 * Run the script from the same directory (python export_things.py)
 * _Optional:_ Commit and push the changes into your Git repository
 
@@ -43,10 +48,10 @@ Credit
 * Thanks to everyone who is re-sharing the script
 * Thanks to **Derrick Oswald** for writing installation instructions
 * Thanks to [**Mark Durbin (MakeALot)**](https://twitter.com/MarkDurbin104) for a bugfix
+* Original Author: Carlos Garcia Saura (carlosgs)
 
-Author: Carlos Garcia Saura (carlosgs)
 --------
-<http://carlosgs.es/>  
+<http://fatiher.com/>  
 
 License
 --------
