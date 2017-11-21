@@ -39,7 +39,7 @@ authorMark = True # If set true, will write your author name and description at 
 downloadFiles = True # If set to false, will link to original files instead of downloading them
 redownloadExistingFiles = False # This saves time when re-running the script in long lists (but be careful, it only checks if file already exists - not that it is good -)
 
-redownloadExistingThings = False # If set False, it won't re-download anything from things that already have a folder (be careful, it ONLY checks if the THING FOLDER already exists - not that it is good -). Useful to save time when resuming long lists
+redownloadExistingThings = True # If set False, it won't re-download anything from things that already have a folder (be careful, it ONLY checks if the THING FOLDER already exists - not that it is good -). Useful to save time when resuming long lists
 
 url = "https://www.thingiverse.com"
 
