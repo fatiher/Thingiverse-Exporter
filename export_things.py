@@ -9,33 +9,37 @@
 
 # Modules
 import requests
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import os
 import re
 import urllib
 import time
 import pickle # For file saving
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8') # Setting default encoding to utf-8
 
 # EDIT THIS!
-user = "carlosgs" # User from Thingiverse (as in the profile URL)
-authorName = "Carlos Garcia Saura (carlosgs)" # Any string is OK
-authorDescription = "<http://carlosgs.es/>"
+user = "fatiher" # User from Thingiverse (as in the profile URL)
+authorName = "fatihER" # Any string is OK
+authorDescription = "<http://fatiher.com/>"
 
-readmeHeader = "**Please note: This list of things was [automatically generated](https://github.com/carlosgs/export-things). Make sure to check the individual licenses and authorships.**  \n"
+readmeHeader = "*** Please note: This list of things was [automatically generated](https://github.com/fatiher/export-things). Make sure to check the individual licenses and authorships. ***  \n"
 
-thingReadmeHeader = "**Please note: This thing is part of a list that was [automatically generated](https://github.com/carlosgs/export-things) and may have been updated since then. Make sure to check for the current license and authorship.**  \n"
+thingReadmeHeader = "*** Please note: This thing is part of a list that was [automatically generated](https://github.com/fatiher/export-things) and may have been updated since then. Make sure to check for the current license and authorship.**  \n"
 
-listPageTitle = "Things designed by " + authorName
-#listPageTitle = "Things liked by " + authorName
+#listPageTitle = "Things designed by " + authorName
+listPageTitle = "Things liked by " + authorName
 
-urlPathToDownload = "/designs/page:" # "/likes/page:" # Set to the url you want to download from (either your posted designs or your liked designs)
+urlPathToDownload = "/likes/page:" # "/designs/page:" # Set to the url you want to download from (either your posted designs or your liked designs)
 
 authorMark = True # If set true, will write your author name and description at the bottom of all pages
 
 downloadFiles = True # If set to false, will link to original files instead of downloading them
-redownloadExistingFiles = False # This saves time when re-running the script in long lists (but be careful, it only checks if file already exists -not that it is good-)
+redownloadExistingFiles = False # This saves time when re-running the script in long lists (but be careful, it only checks if file already exists - not that it is good -)
 
-redownloadExistingThings = True # If set False, it won't re-download anything fron things that already have a folder (be careful, it ONLY checks if the THING FOLDER already exists -not that it is good-). Useful to save time when resuming long lists
+redownloadExistingThings = False # If set False, it won't re-download anything from things that already have a folder (be careful, it ONLY checks if the THING FOLDER already exists - not that it is good -). Useful to save time when resuming long lists
 
 url = "https://www.thingiverse.com"
 
@@ -114,10 +118,11 @@ with open("README.md", 'w') as fdr: # Generate the global README file with the l
 #		if pgNum < 17:
 #			pgNum += 1
 #			continue
-		res = httpGet(url + "/" + user + urlPathToDownload + str(pgNum), redir=False)#, filename="test" + str(pgNum) + ".html")
+		session = requests.session()
+		res = session.get(url + "/" + user + urlPathToDownload + str(pgNum)) #, redir=False)#, filename="test" + str(pgNum) + ".html")
 		if res == -1: break
-		res_xml = BeautifulSoup(res, convertEntities=BeautifulSoup.HTML_ENTITIES)
-		things = res_xml.findAll("div", { "class":"thing thing-interaction-parent" })
+		res_xml = BeautifulSoup(res.content,"lxml")
+		things = res_xml.findAll("div", { "class":"thing thing-interaction-parent item-card" })
 		for thing in things: # Iterate over each thing
 			thingList[thingCount] = {}
 			
@@ -133,9 +138,9 @@ with open("README.md", 'w') as fdr: # Generate the global README file with the l
 			print("\nProcessing thing: " + id + " : " + title)
 #			if id != "59196": continue
 			
-			folder = "-".join(re.findall("[a-zA-Z0-9]+", title)) # Create a clean title for our folder
+			folder = id + "-" + "-".join(re.findall("[a-zA-Z0-9]+", title)) # Create a clean title for our folder
 			print(folder)
-			previewImgUrl = str(thing.findAll("img", { "class":"thing-img" })[0]["src"]) # Get the link for the preview image
+			previewImgUrl = str(thing.findAll("img", { "class":"thing-img" })[0]["src"]).encode('utf-8') # Get the link for the preview image
 			previewImgName = previewImgUrl.split('/')[-1]
 			previewImgFile = folder + "/img/" + previewImgName
 			
@@ -153,11 +158,12 @@ with open("README.md", 'w') as fdr: # Generate the global README file with the l
 			
 				print("Loading thing data")
 			
-				res = httpGet(url + "/thing:" + id, redir=False) # Load the page of the thing
+				session = requests.session()
+				res = session.get(url + "/thing:" + id) #, redir=False) # Load the page of the thing
 				if res == -1:
 					print("Error while downloading " + id + " : " + title)
 					exit()
-				res_xml = BeautifulSoup(res, convertEntities=BeautifulSoup.HTML_ENTITIES)
+				res_xml = BeautifulSoup(res.content,"lxml")
 			
 				description = res_xml.findAll("div", { "id":"description" })
 				if description:
@@ -169,7 +175,7 @@ with open("README.md", 'w') as fdr: # Generate the global README file with the l
 				
 				instructions = res_xml.findAll("div", { "id":"instructions" })
 				if instructions:
-					instructions = "".join(str(item) for item in instructions[0].contents) # Get the instructions
+					instructions = "".join(str(item).encode('utf-8') for item in instructions[0].contents) # Get the instructions
 					instructions = instructions.strip()
 				else:
 					instructions = "None"
@@ -203,8 +209,8 @@ with open("README.md", 'w') as fdr: # Generate the global README file with the l
 			
 				files = {}
 				for file in res_xml.findAll("div", { "class":"thing-file" }): # Parse the files and download them
-					fileUrl = url + str(file.a["href"])
-					fileName = str(file.a["data-file-name"])
+					fileUrl = url + str(file.a["href"]).encode('utf-8')
+					fileName = (file.a["data-file-name"]).encode('utf-8')
 					filePath = folder + "/" + fileName
 					if downloadFiles:
 						print("Downloading file ( " + fileName + " )")
@@ -212,7 +218,7 @@ with open("README.md", 'w') as fdr: # Generate the global README file with the l
 					else:
 						print("Skipping download for file: " + fileName + " ( " + fileUrl + " )")
 				
-					filePreviewUrl = str(file.img["src"])
+					filePreviewUrl = str(file.img["src"].encode('utf-8'))
 					filePreviewPath = filePreviewUrl.split('/')[-1]
 					filePreview = folder + "/img/" + filePreviewPath
 					print("-> Downloading preview image ( " + filePreviewPath + " )")
