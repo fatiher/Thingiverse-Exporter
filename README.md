@@ -1,6 +1,4 @@
-_FORK Disclaimer_ : Just fixed the original script written by Carlos Garcia Saura (carlosgs) to work with BeautifulSoup4 and done some minor changes. I'm not a python programmer so some googling and stackoverflow searches help me to make script run again..
-
-Know bugs : When script reaches to the end page it does not stop. Just leaching same last page over and over.
+_FORK Disclaimer_ : Just fixed the original script written by Carlos Garcia Saura (carlosgs) to work with BeautifulSoup4 and done some minor changes. I'm not a python programmer so some googling and stackoverflow searches help me to make script run again.. Hope it helps you!
 
 Thingiverse Exporter
 =============
