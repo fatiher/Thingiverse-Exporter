@@ -1,24 +1,28 @@
 #!/usr/bin/python
 
-# Thingiverse* exporter
+# Thingiverse Exporter
 # by Carlos Garcia Saura (http://carlosgs.es)
+# patched by Fatih ER (http://www.fatiher.com)
 # CC-BY-SA license (http://creativecommons.org/licenses/by-sa/3.0/)
-# https://github.com/carlosgs/export-things
+# https://github.com/fatiher/export-things
 # *Unofficial program, not associated with Thingiverse
 # Use at your own risk!
 
 # Modules
 import requests
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import os
 import re
 import urllib
 import time
 import sys
 
+reload(sys)
+sys.setdefaultencoding('utf-8') # Setting default encoding to utf-8
+
 thingID = sys.argv[1]
 
-thingReadmeHeader = "**Please note: This page was [automatically generated](https://github.com/carlosgs/export-things) and may have been updated since then. Make sure to check for the current license and authorship.**  \n"
+thingReadmeHeader = "*** Please note: This thing is part of a list that was [automatically generated](https://github.com/fatiher/export-things) and may have been updated since then. Make sure to check for the current license and authorship. ***  \n"
 
 downloadFiles = True # If set to false, will link to original files instead of downloading them
 redownloadExistingFiles = False # This saves time when re-running the script in long lists (but be careful, it only checks if file already exists -not that it is good-)
@@ -74,7 +78,7 @@ res = httpGet(url + "/thing:" + thingID, redir=False) # Load the page of the thi
 if res == -1:
 	print("Error while downloading " + thingID + " : " + title)
 	exit()
-res_xml = BeautifulSoup(res, convertEntities=BeautifulSoup.HTML_ENTITIES)
+res_xml = BeautifulSoup(res, "lxml")
 
 
 try:
@@ -86,7 +90,7 @@ except:
 title = re.sub("\[[^\]]*\]","", title) # Optional: Remove text within brackets from the title
 title = title.strip()
 
-folder = "-".join(re.findall("[a-zA-Z0-9]+", title)) # Create a clean title for our folder
+folder = thingID + "-" + "-".join(re.findall("[a-zA-Z0-9]+", title)) # Create a clean title for our folder
 print(folder)
 
 makeDirs(folder) # Create the required directories
@@ -198,5 +202,4 @@ with open(folder + "/README.md", 'w') as fd: # Generate the README file for the 
 	fd.write("  \n\nLicense\n--------\n")
 	fd.write(license + "  \n\n")
 
-print("\n\nIt's done!! Keep knowledge free!! Au revoir Thingiverse!!\n")
-
+print("\n\nExport is completed.. Keep knowledge free!!\n")
