@@ -1,40 +1,38 @@
-_FORK Disclaimer_ : Just fixed the original script written by Carlos Garcia Saura (carlosgs) to work with BeautifulSoup4 and done some minor changes. I'm not a python programmer so some googling and stackoverflow searches help me to make script run again.. Hope it helps you!
-
 Thingiverse Exporter
 =============
 
-Script that simplifies exporting all your stuff out of Thingiverse  
-It creates a Git-compatible directory with a list and folders. Each folder contains all the files, images and description for each design.  
+Python2 script that simplifies exporting all your stuff out of Thingiverse.  
+It creates a Git-compatible directory with a list and folders. Each folder contains all the files, images and description for each design. 
 
+Also added an option to generate a "Archive Gallery" HTML file for easy viewing and searching.. 
 
-Example of the result: <https://github.com/carlosgs/carlosgs-designs>  
-
-
-Disclaimer
+_Disclaimer_
 --------
-Not associated with Thingiverse, use at your own risk  
+I'm not a python programmer so some googling and stackoverflow searches help me to make script run again.. Hope it helps you! Not associated with Thingiverse, use at your own risk.
 
 Instructions
 --------
 * _Optional:_ Create an empty Git repository, clone the repo locally
-* Download [the python script](export_things.py) as raw into the created empty directory
+* Download [the python script](thingExport.py) as raw into the created empty directory
 * Edit lines 17-19 for user, authorName, and authorDescription
 * Install PIP (sudo apt-get install python-pip)
 * Install requests (sudo pip install requests)
+* Install natsort (sudo pip install natsort)
 * Install lxml (sudo pip install lxml)
 * Install beautifulsoup4 (sudo pip install beautifulsoup4)
 * Run the script from the same directory (python export_things.py)
 * _Optional:_ Commit and push the changes into your Git repository
 
-You can also **browse the generated directories offline**, by simply using a **Markdown viewer** (i.e. [MarkdownPreview](https://chrome.google.com/webstore/detail/markdown-preview/jmchmkecamhbiokiopfpnfgbidieafmd?hl=en) for Chrome)  
+You can **browse the generated directories offline**, by simply using the generated **"ThingList.html"** file.
 
 **New**  
-* Added [another script](export_one_thing.py) that allows fetching a single design. Run as:
-<pre>export_one_thing.py thingID</pre>
-* It will create a directory with the title of the design and all the necessary files.
+
+* Combined 3 different scripts into one. Now you can choose what to do.
+* Generate "Things Directory" Gallery from all things you archived.
 
 **Features**  
-* Select which page to download (save your liked things too!)
+
+* Select which page to download (desings/liked) (save your liked things too!)
 * Files can be downloaded OR linked from the original website to save disk space
 * Customize authorship
 * Customize the header for the pages
